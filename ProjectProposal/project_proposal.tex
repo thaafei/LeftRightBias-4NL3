@@ -1,0 +1,144 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsmath, amssymb}
+
+
+\title{Group 25 Progress Report:\\AI Essay Detector}
+
+
+\author{
+  Fei Xie, Ghena Hatoum, Haniye Hamidizadeh \\
+  \texttt{\{xief17,hatoumg,hamidizf\}@mcmaster.ca}
+}
+
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+The widespread and accessible nature of Generative AI (GenAI) tools, such as ChatGPT and Gemini, has created a significant shift in the educational landscape. While these tools are valuable for quick information retrieval, their rapid adoption precedes the necessary adaptations in academic practices. \\
+The core issue is that unchecked reliance on GenAI for academic work can have long-term developmental consequences for students. It prevents them from engaging in the process of formulating original thoughts and arguments, which is critical for developing their unique intellectual voice.
+A reliable AI Text Detector, integrated within the education system, would allow educators to foster responsible use of GenAI as an educational aid rather than a replacement for student effort. \\
+Developing an effective detector is challenging for several reasons: 
+\begin{itemize}
+\item{Low Accuracy of Existing Models: Current models are not accurate enough for real-world academic use.}
+\item{Evolving Realism: GenAI systems are constantly improving, generating increasingly human-like text, requiring the detector to be dynamically updated.}
+\item{Critical False Positive Rate: The model must achieve a near-zero false positive rate to ensure no student is wrongfully accused of plagiarism while maintaining high accuracy in identifying genuine misuse.}
+\end{itemize}
+
+\section{Related Work}
+
+Detecting AI-generated text is closely connected to research in text classification. An overview of how methods such as TF-IDF have been used in traditional machine-learning models before the development of deep-learning techniques as seen in the survey “A Survey on Text Classification: From Traditional to Deep Learning” \cite{qianli2022}.
+\\In practical applications, AI text detection has been explored through competitions, such as the kaggle AI Text Detection Competition \cite{kaggle_ai_FarisML}. Public notebooks from the competition show examples of baseline systems that use TF-IDF combined with classifiers such as Logistic Regression or SVM. Two examples are the notebooks by Faris Al-Ahmadi \cite{kaggle_ai_FarisML} and Jasmine Mohamed \cite{kaggle_jasmine}, where TF-IDF is used to represent essays numerically before training classification models.
+\\More recent work focuses on neural network approaches. LSTM models are often used for text classification tasks because they can process text as a sequence and keep track of earlier context in the input. An example of this is shown in an LSTM text-classification notebook \cite{kaggle_ai_siti}. Transformer-based models such as DistilBERT have also been applied to similar classification problems. The KerasNLP starter notebook from the same Kaggle competition shows how DistilBERT can be fine-tuned for detecting AI-generated text \cite{kaggle_ai_alexia}.
+\\There is also research specifically focused on identifying patterns unique to AI-generated writing. The “DetectGPT” paper \cite{mitchell2023detectgptzeroshotmachinegeneratedtext} shows that AI-generated text often has different patterns in how words are used compared to human writing and discusses ways to detect those differences.
+
+\section{Dataset}
+
+We will be using the DAIGT V2 Train Dataset from Kaggle \cite{kaggle_ai_daigt}. This comprehensive dataset is a collection of other datasets. One of the sub datasets contain argumentative essays written by grade 6 to 12 students. The remaining sub datasets contain AI-generated essays from numerous models as seen in Table~\ref{sub-datasets}.
+
+The dataset is pre\-labelled and additional columns include prompt\_name (original persuade prompt), source (original dataset), text (actual text content), and RDizzl3\_seven (Classifier built for a previous Kaggle competition, indicating whether the essays were written in response to one of the seven essay prompts for the competition). 
+\\Our team has dropped all the features other than text and the label.
+
+\subsection{Preprocessing}
+Using the text feature, we have extracted additional features. These include:
+\\\textbf{Word Statistics} \\
+The features include the total number of words in the text/document, the sum of words that repeat frequently (greater or equal to 5 times), and the sum of words that appear infrequently (less than 5 times). All these features are integers. 
+\\\textbf{Punctuations Statistics}\\
+The features include the number and ratios of the following punctuations: [\texttt{', -, ;, :, ., !, ?, (, ), [, ], \{, \}, /, ", ', \_}].
+The model incorporates the percentage of characters that are one of the 17 different punctuation marks shown above. These features are integers. It also includes the total punctuation percentage, which is the sum of these individual percentages. These values are between 0 and 1. 
+\\\textbf{TF-IDF Vectorizer} \\
+The model uses the TF-IDF vectorizer provided by ski-kit as another feature set. 
+Term frequency (TF) measures how often a word appears in a specific document as shown in Equation~\ref{eq:tf}. A higher frequency suggests greater importance within that document. Inverse document frequency (IDF) captures the term popularity as an inverse of the overall corpus as shown in Equation~\ref{eq:idf}. Our TF-IDF matrix has a max of 10000 features.
+
+\section{Features}
+
+Describe any features you used for your model, or how your data was input to your model. Are you doing feature engineering or feature selection? Are you learning embeddings? Is it all part of one neural network? Refer to item 2. This may range from 0.25 pages to 0.5 pages.
+
+\section{Implementation}
+
+Describe your model and implementation here. Refer to item 4. This may take around a page.
+
+\section{Results and Evaluation}
+
+To evaluate our model, we split the data into training, validation, and test sets using an 80/10/10 split. The validation set allows us to monitor how well the model is learning during training, and the test set provides a final measure of performance on data the model has not seen before. For evaluation, we use both Accuracy and F1 Score. Accuracy indicates how often the model predicts the correct label overall, while the F1 Score reflects how well the model balances detecting AI-generated essays without incorrectly flagging human-written ones.
+
+We began by establishing baselines using different subsets of features. The first baseline used only punctuation-based features (for example, the relative frequency of commas, periods, and other punctuation marks). This model achieved approximately 0.83 accuracy and around 0.77 F1 on the test set. This suggests that while punctuation usage differs to some extent between human and AI-generated essays, punctuation alone is not sufficient for reliable classification.
+
+Next, we trained a model using only TF-IDF with N-grams, which represents each essay based on how strongly certain words and short phrases appear relative to the rest of the dataset. This model performed very well, achieving approximately 0.997 accuracy and about 0.997 F1 on the test set. We then combined TF-IDF with punctuation-based features and word-count-related features. The results were effectively the same as using TF-IDF alone, indicating that most of the meaningful signal for distinguishing between human and AI-written text is captured through the phrasing and word usage patterns identified by TF-IDF.
+
+These results suggest that differences in expression style and repeated phrasing patterns play a significant role in distinguishing AI-generated writing. Human authors tend to show greater variation in sentence structure and vocabulary, while AI models may reuse similar transitions or stylistic patterns. Since TF-IDF highlights which words and phrases are most characteristic within each essay, it was able to capture these distinctions effectively, which explains the strong performance of the TF-IDF-based model.
+
+\section{Feedback and Plans}
+
+We have received relatively good feedback from the TA with our current implementation of using logistic regression. Even with our accuracy already being quite high, in the high 90s, we discussed with the TA to implement our model as a neural network instead.
+We will update out model to a Long Short Term Memory network. This will allow us to utilize our initial text feature, that we weren't able to use beforehand with a simple logistic regression approach. If our team have team, we will also investigate using a transformer, such as DistilBERT \cite{sanh2020distilbertdistilledversionbert}, for text classification.
+Based on the suggestion from the TA, we have updated our model training process by splitting up our dataset into training, validation, and test sets, as opposed to only having a training and test set. Our next step is to add k-fold cross validation to our three sets, this will allow us to detect any overfitting of our model and finetune the hyperparameters.\\
+Other potential next steps is to increase our dataset's sample with more AI generated essays from new models, such as the GPT5 family from ChatGPT and model 4 family from Claude. This will allow us to judge our models accuracy, as current AI generated samples were from older models, allowing us to determine if certain charactertistics that were present in older models, such as the excessive use of certain punctuations were over-contributing to our model predictions.
+\section{Team Contributions}
+\textbf{Fei:} Setup and initial implementation of the model, feature engineering for feature sets Word Statistics and Punctuation Statistics excluding TFIDF. Wrote the Dataset and Feedback and Plans sections for the progress report, and ported over the Introduction and Related work sections from team's word document.\\
+\textbf{Haniye:} Improved the feature processing by generating the TF-IDF representation with N-grams and saving the vectorizer to a pickle file so it can be reused without retraining. Also optimized the punctuation feature extraction and updated the data split to include separate train, validation, and test sets. Wrote the Related Work and Results/Evaluation sections.\\
+\textbf{Ghena:} \\
+\bibliography{custom}
+
+\subsection*{Tables and figures}
+See Table \ref{sub-datasets}
+\begin{table*}
+\centering
+\begin{tabular}{p{4cm}p{11cm}}
+\toprule
+\textbf{Dataset Name} & \textbf{Description} \\
+\midrule
+\textbf{Persuade Corpus 2.0} & Provides argumentative essays produced by 6 to 12 grade students. It was created by The Learning Agency and Vanderbilt University, originally pulled from the following GitHub repository. \\[0.5em]
+
+\textbf{ChatGPT} & Contains 2.5k student written texts sourced from the FeedBack Prize 3 Competition, and 2.5k AI-generated texts using ChatGPT. The compiled dataset includes only AI-generated texts and prompts. \\[0.5em]
+
+\textbf{Llama 70b + GPT-4} & Contains 9k essays generated by Llama 70b and Falcon 180b. Prompts come from the Persuade Corpus and GPT\-4, using a total of 35 prompts for generation. \\[0.5em]
+
+\textbf{LLM Generated Essays} & Contains 700 essays generated by LLMs\: 500 from GPT\-3.5\-Turbo and 200 from GPT\-4. \\[0.5em]
+
+\textbf{Claude Essays} & Contains 1000 essays generated by Claude-Instant-1 using 15 prompts from the Persuade Corpus. Prompts were sourced from the competition discussion. \\[0.5em]
+
+\textbf{PaLM Essays} & Contains 1384 essays generated by PaLM. Prompts were sourced from a Kaggle competition notebook. \\
+\bottomrule
+\end{tabular}
+\caption{Summary of Datasets Used in the DAIGT V2 Train Dataset}
+\label{sub-datasets}
+\end{table*}
+
+\subsection*{Equations}
+
+\begin{equation}
+  \label{eq:tf}
+  TF(w, d) = \frac{\text{count}(w, d)}{\text{total words in } d}
+\end{equation}
+
+\begin{equation}
+  \label{eq:idf}
+  IDF(w, C) = \log\left( \frac{|C|}{|\{\, d \in C : w \in d \,\}|} \right)
+\end{equation}
+
+% Custom bibliography entries only
+% \bibliographystyle {plainnat}
+
+
+\end{document}
