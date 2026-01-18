@@ -32,7 +32,25 @@
 
 \section{Task Introduction}
 
+Our project builds a Natural Language Processing model that classifies news/media headlines by political 
+leaning (left vs. right). This task is significant because headlines heavily shape first impressions of 
+an event, and an automatic “leaning” label can support media literacy tools, dataset exploration for 
+researchers, and other media systems that want balanced coverage. It's challenging because political 
+framing in headlines is often subtle and context-dependent: choices like which facts are revealed, 
+what groups are named or hidden, and the use of terms can signal ideology without using obviously 
+emotional language. Unlike sentiment analysis, our focus is ideological framing and viewpoint, not 
+whether the headline sounds positive or negative. To keep our labels consistent, we'll write a 
+short annotation guide with specific cues to look for, then have everyone in the team label the same starter 
+set of headlines to line up our interpretations. Our goal is to reach agreement that's clearly better 
+than chance, while recognizing that some headlines will still be genuinely hard to classify.
+
 \section{Task Definition}
+
+Task definition. Our dataset consists of media headlines, so each input example is a short piece of text. 
+The task is a supervised classification problem: given a headline, the model predicts the headline's political 
+leaning based on its framing. We use two classes (left leaning and right leaning) making this a binary 
+classification setup. Each headline receives one label only (single-label), meaning it is annotated as 
+either left or right (not both).
 
 \section{Dataset}
 
