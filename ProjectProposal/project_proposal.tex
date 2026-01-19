@@ -55,7 +55,34 @@ either left or right (not both).
 \section{Dataset}
 
 \subsection{Plans for Collection}
+We will use an existing annotated dataset \textit{allsides\_balanced\_news\_headlines-texts.txt} from \url{https://github.com/irgroup/Qbias/tree/main} . 
+Each instance contains at minimum an English news \textbf{headline} and a political-leaning label (left/right), and may also include metadata such as the news outlet/source, event/topic title, topic tags, publication date, and a short article text/snippet (depending on the fields available in the release).
+
+We will use only publicly available data for this course project and follow the dataset's license/usage terms.
+We do not plan to perform additional web scraping. Prior to modeling, we will apply basic cleaning
+(removing empty entries, de-duplication, and text normalization). We will also remove the center
+class and formulate the task as a binary classification problem (left vs. right).
+
 \subsection{Expected Dataset Size}
+After removing the \texttt{center} class, we expect to use $N = 17{,}534$ labeled examples in total,
+with $10{,}296$ left-leaning and $7{,}238$ right-leaning headlines. We will create train/dev/test splits with an approximate 80/10/10 ratio (with the exact proportions determined by the outlet-based grouping constraint).
+
+As required, we provide three example data points with labels assigned by our group:
+\begin{enumerate}
+  \item \textbf{Event/Topic:} Gun Violence Over Fourth of July Weekend \\
+        \textbf{Headline:} ``Chicago Gun Violence Spikes and Increasingly Finds the Youngest Victims'' \\
+        \textbf{Outlet:} New York Times (News) \\
+        \textbf{Group label:} \texttt{left}
+  \item \textbf{Event/Topic:} Gun Violence Over Fourth of July Weekend \\
+        \textbf{Headline:} ``Dozens of shootings across US mark bloody July 4th weekend'' \\
+        \textbf{Outlet:} New York Post (News) \\
+        \textbf{Group label:} \texttt{right}
+  \item \textbf{Event/Topic:} Yellen Warns Congress of ``Economic Recession'' if Debt Ceiling Isn't Raised \\
+        \textbf{Headline:} ``Federal Government Will Run Out of Cash on Oct.\ 18 If Debt Ceiling Isn't Raised: Treasury Secretary'' \\
+        \textbf{Outlet:} The Epoch Times \\
+        \textbf{Group label:} \texttt{right}
+\end{enumerate}
+
 
 \section{Team Contract}
 The team contract outlines the expectations of the team for the duration of the project. Submission of this project proposal implies that all members listed in the author section has read and agreed to the following contract.
