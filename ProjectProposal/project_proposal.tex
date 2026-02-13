@@ -2,7 +2,7 @@
 
 % Change "review" to "final" to generate the final (sometimes called camera-ready) version.
 % Change to "preprint" to generate a non-anonymous version with page numbers.
-\usepackage[]{acl}
+\usepackage[margin=1in]{geometry}
 \usepackage{times}
 \usepackage{latexsym}
 
@@ -18,9 +18,12 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+\usepackage{multicol}
 
 
-\title{Group 42 Progress Report:\\ Left and Right Leaning Bias Detection in Media Headlines}
+
+\title{Group 42 Progress Report:\\ Category Detection for Youtube Videos}
 
 
 \author{
@@ -32,55 +35,76 @@
 
 \section{Task Introduction}
 
-Our project builds a Natural Language Processing model that classifies news/media headlines by political 
-leaning (left vs. right). This task is significant because headlines heavily shape first impressions of 
-an event, and an automatic “leaning” label can support media literacy tools, dataset exploration for 
-researchers, and other media systems that want balanced coverage. It's challenging because political 
-framing in headlines is often subtle and context-dependent: choices like which facts are revealed, 
-what groups are named or hidden, and the use of terms can signal ideology without using obviously 
-emotional language. Unlike sentiment analysis, our focus is ideological framing and viewpoint, not 
-whether the headline sounds positive or negative. To keep our labels consistent, we'll write a 
-short annotation guide with specific cues to look for, then have everyone in the team label the same starter 
-set of headlines to line up our interpretations. Our goal is to reach agreement that's clearly better 
-than chance, while recognizing that some headlines will still be genuinely hard to classify.
+Our project builds a Natural Language Processing model that classifies the main category of a Youtube video. This task is significant because there are more content being uploaded on Youtube everyday,
+so classifying videos by category accurately can help filter content. The categories are the following: 
+\begin{multicols}{3}
+  \begin{enumerate}
+    \item Food/Cooking
+    \item Video Games
+    \item Sports
+    \item Music
+    \item Documentary/Education
+    \item Shopping/Reviews
+    \item Autos/Vehicles
+    \item Lifestyle/Vlog
+    \item News/Current Events
+    \item Health/Fitness
+    \item Business/Finance
+  \end{enumerate}
+\end{multicols}
+These categories are determined from YouTube’s category list \href{https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/}{(see here)} 
+and our team’s own generalization. Most importantly, it will be interesting 
+to analyze the shared commonalities of video titles and descriptions across 
+different categories. This task is challenging because most video titles do 
+not explicitly state their category and may depend on the channel’s niche 
+or current world events.To keep our labels consistent, we’ll write a short
+annotation guide with specific cues to look for, then
+have everyone in the team label the same starter
+set of headlines to line up our interpretations. Our
+goal is to reach agreement that’s clearly better than
+chance, while recognizing that some headlines will
+still be genuinely hard to classify.
 
 \section{Task Definition}
-
-Task definition. Our dataset consists of media headlines, so each input example is a short piece of text. 
-The task is a supervised classification problem: given a headline, the model predicts the headline's political 
-leaning based on its framing. We use two classes (left leaning and right leaning) making this a binary 
-classification setup. Each headline receives one label only (single-label), meaning it is annotated as 
-either left or right (not both).
+Our dataset consists of Youtube video titles and descriptions, so each input example is a short piece of text. 
+The task is a supervised multinomial classification problem: given a title and description, the model predicts the video's primary category. We will use 11 classes, one for each of the categories mentioned above.
+We will stick with one label initially, as we are interested in seeing the primary category they are classified in.
 
 \section{Dataset}
 
 \subsection{Plans for Collection}
-We will use an existing annotated dataset \textit{allsides\_balanced\_news\_headlines-texts.txt} from \url{https://github.com/irgroup/Qbias/tree/main} . 
-Each instance contains at minimum an English news \textbf{headline} and a political-leaning label (left/right), and may also include metadata such as the news outlet/source, event/topic title, topic tags, publication date, and a short article text/snippet (depending on the fields available in the release).
+We will use an existing dataset \textit{youtube-titles.txt} from \url{https://huggingface.co/datasets/AdamLucek/youtube-titles}. 
+Each instance contains at minimum the video title \textbf{(video\_title)} and a video description \textbf{(video\_description)}, and also metadata such as the channel\_name, channel\_url, channel\_id and video\_id.
 
 We will use only publicly available data for this course project and follow the dataset's license/usage terms.
 We do not plan to perform additional web scraping. Prior to modeling, we will apply basic cleaning
-(removing empty entries, de-duplication, and text normalization). We will also remove the center
-class and formulate the task as a binary classification problem (left vs. right).
+(removing emojis, links, promo codes and text normalization). We will also remove all columns other than the video title and description.
 
 \subsection{Expected Dataset Size}
-After removing the \texttt{center} class, we expect to use $N = 17{,}534$ labeled examples in total,
-with $10{,}296$ left-leaning and $7{,}238$ right-leaning headlines. We will create train/dev/test splits with an approximate 80/10/10 ratio (with the exact proportions determined by the outlet-based grouping constraint).
+We expect to use N = 4.2k examples. These are unlabeled, but we can use \href{youtube category checker tools}{https://tubepilot.ai/tools/youtube-category-checker/} to add labels for the remaining samples that our group didn't annotate by hand.
+We will create train/dev/test splits with an approximate 80/10/10 ratio (with the exact proportions determined by the outlet-based grouping constraint).
 
 As required, we provide three example data points with labels assigned by our group:
 \begin{enumerate}
-  \item \textbf{Event/Topic:} Gun Violence Over Fourth of July Weekend \\
-        \textbf{Headline:} ``Chicago Gun Violence Spikes and Increasingly Finds the Youngest Victims'' \\
-        \textbf{Outlet:} New York Times (News) \\
-        \textbf{Group label:} \texttt{left}
-  \item \textbf{Event/Topic:} Gun Violence Over Fourth of July Weekend \\
-        \textbf{Headline:} ``Dozens of shootings across US mark bloody July 4th weekend'' \\
-        \textbf{Outlet:} New York Post (News) \\
-        \textbf{Group label:} \texttt{right}
-  \item \textbf{Event/Topic:} Yellen Warns Congress of ``Economic Recession'' if Debt Ceiling Isn't Raised \\
-        \textbf{Headline:} ``Federal Government Will Run Out of Cash on Oct.\ 18 If Debt Ceiling Isn't Raised: Treasury Secretary'' \\
-        \textbf{Outlet:} The Epoch Times \\
-        \textbf{Group label:} \texttt{right}
+  \item \textbf{Title:} [Ludum Dare \#43] The Resistance: Behind the Scenes \\
+    \textbf{Description:} ``A game about batteries. Made in 48 hours for the Ludum Dare 43 game jam https://ldjam.com/events/ludum-dare/43/the-resistance. Support the creation of more tutorials and get early access to new videos: https://www.patreon.com/SebastianLague``
+  \item \textbf{Title:} Quadruple Stacked Ham Sandwich from Final Fantasy XV | Arcade with Alvin \\
+    \textbf{Description:} ``This episode is sponsored by Squarespace. Head to http://bit.ly/squarespacebabish to save 10\% off your first purchase of a website or domain using code BABISH.
+    On this episode of Arcade with Alvin, Alvin makes the gravity-defying Stacked Ham Sandwich from Final Fantasy XV.
+    Follow Alvin Zhou on Instagram: https://www.instagram.com/alvin.zhou/
+    Pre-Order the new Basics with Babish Cookbook: https://www.bingingwithbabish.com/cookbook
+    Babish Cookware on Amazon: http://bit.ly/babishstore''
+  \item \textbf{Title:} 7 tech leaders who ended up in prison \\
+    \textbf{Description:} ``Yesterday, Sam Bankman-Fried was sentenced to 25 years in prison. Let's look at 7 other tech leaders and entrepreneurs who broke the law and went to prison.
+    \#tech \#hacking \#thecodereport
+    Chat with Me on Discord https://discord.gg/fireship
+    Resources
+    Full Stripe Payments Course https://fireship.io/courses/stripe-saas
+    Tech Trends 2024 https://youtu.be/vyQv563Y-fk
+    Get More Content - Upgrade to PRO
+    Upgrade at https://fireship.io/pro
+    Use code YT25 for 25\% off PRO access
+'' 
 \end{enumerate}
 
 
