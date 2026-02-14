@@ -6,6 +6,9 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{times}
 \usepackage{latexsym}
+\usepackage{multicol}
+\usepackage{hyperref}
+\usepackage{seqsplit}
 
 
 % For proper rendering and hyphenation of words containing Latin characters (including in bib files)
@@ -21,7 +24,8 @@
 \usepackage{amsmath, amssymb}
 
 
-\title{Group 42 Progress Step One:\\ Category Detection for Youtube Videos}
+
+\title{Group 42 Progress Step One:\\ Category Detection of YouTube Videos}
 
 
 \author{
@@ -32,10 +36,168 @@
 \maketitle
 
 \section{Annotation Instructions}
+For our task of identifying the primary category of a YouTube video, we've established some guidelines to help annotators with our classification task. To start, a quick summary of the task itself.
+Our group have determined 11 categories of YouTube videos, sourced from YouTube's category list \href{https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/}{(see here)} and our team's own assumptions. 
+\\ \\
+The task is to answer the classification question, \textbf{"What is the main category of this YouTube video?"}. You can achieve this by reading both the \textbf{title} and \textbf{description} in order to determine the most probably category. In other words, each sample should be labeled with only 1 of the 11 categories.
+\\
+Use the guideline below to support your decision, but ultimately your best judgement as there will be edge cases.
+Overall guidelines for annotation are as follows:
+\begin{enumerate}
+  \item Use both the video title and the description
+  \item If a video title and description don't align, place more emphasize on the context mentioned from the title.
+  \item Identify the primary intent, think "What is the video mainly trying to do?". For example, a cooking vlog in Paris should be categorized as Food \& Cooking instead of Lifestyle. Since the primary content is on the cooking itself and the creator just happened to be in Paris.
+  \item Do not categorize based on the channel, we should assume all videos are independent and not categorize all videos similarly if it came from the same channel.
+  \item If a video can be grouped in multiple categories, choose the category that is more specific. For example, an educational video on stock markets should be categorized as Business, as that is more specific.
+\end{enumerate}
+\noindent Guidelines for each category are listed below, note that they are not definitive.
+\begin{enumerate}
+  \item \textbf{Food \& Cooking}: Recipe, Cooking Technique
+  \item \textbf{Video Games}: Gameplay, Game Reviews, Streaming Highlights
+  \item \textbf{Sports \& Games}: Sport Games, Commentary, Board Games, Training Specific to Sport
+  \item \textbf{Music}: Music Videos, Karaoke Videos
+  \item \textbf{Education}: School Coursework, Math, General Knowledge Videos, Documentary
+  \item \textbf{Shopping}: Product Reviews, Shopping Hauls
+  \item \textbf{Vehicles}: Car Shows, Racing
+  \item \textbf{Lifestyle}: Traveling, Day-in-the-life, Vlogs
+  \item \textbf{News}: Politics, Breaking News, Current Events
+  \item \textbf{Health \& Fitness}: Gym, Workout Plans, Diet
+  \item \textbf{Business}: Investing, Economy, Entrepreneurship, Finance
+\end{enumerate}
+
+\subsection{Annotation Examples}
+
+\subsubsection{Food \& Cooking}
+\textbf{Title}: Recreating Maangchi's Seafood Kimchi Fried Rice From Taste | Reverse Engineering | Bon Appétit \\
+\textbf{Description}: We challenged Chris Morocco to recreate Maangchi's seafood kimchi fried rice in the Bon Appétit Test Kitchen. The catch? He’s doing it blindfolded with only his other senses to guide him.
+    Want Bon Appétit shirts, hats and more?
+    Still haven’t subscribed to Bon Appétit on YouTube?
+    Want more Bon Appétit in your life? Subscribe to the main channel. \\
+\textbf{Reasoning}: This video purpose is on recreating a recipe, so the purpose is to teach the audience how to cook it. It's not Lifestyle/Vlog because we are not watching someone cooking for themselves. 
+
+\subsubsection{Video Games}
+\textbf{Title}: A Stupid Stupid Man Sells Sharks in Dave the Diver \\
+\textbf{Description}: Dave has dived too deep, and the sharks now plot their revenge
+    Watch all my Dave the Diver videos:
+    ~This video was recorded live on my Twitch Channel:
+    ~Subscribe if you'd like to see more! 
+    ~Become a Youtube Member to support me:
+    ~Follow me on Twitter: \\
+\textbf{Reasoning}: This video is about a popular videogame called Dave the Diver. Although this requires some background knowledge, we can tell it's not about real life just based on the title, where it says "in" Dave the Diver. If this was a vlog, it would list a place or country, instead of a person. 
+
+\subsubsection{Lifestyle}
+\textbf{Title}: Reuniting with my Dad \\
+\textbf{Description}: music from these talented artists; \\
+\textbf{Reasoning}: This is a case where the title and description do not align. We see the description mentions music, while the title is about family reunion. We will use the general guideline of placing more emphasize on the video title, therefore this video should be classified as Lifestyle/Vlog.
+
+\subsubsection{Music}
+\textbf{Title}: Nexpo: Extended Play | Video Extras \\
+\textbf{Description}: Hey everyone. Had some requests for full versions of the new intro/old outro songs that I've used so I've consolidated them here for you to jam to. 
+  Hope you enjoy!
+  Track 1 (0:00): 
+  "Black Heat" (NE Edit) - Ross Bugden
+  Track 2 (3:57):
+  "Kooler" - ZachJ \\
+\textbf{Reasoning}: Explicit mention of tracks and songs. 
+
+\subsubsection{Shopping}
+\textbf{Title}: This Keyboard is BUDGET. \\
+\textbf{Description}: (This keyboard was sent to me for free by Wobkey - I'll have a vid on it this Saturday!) \#keyboards \#mechanicalkeyboards \#mechanicalkeyboard \#customkeyboard \#keycaps \\
+\textbf{Reasoning}: Although not specifically mentioning “review” or “shop”, we can imply from the title that this video is reviewing a keyboard. It won’t be lifestyle/vlog because there is no mention of using it for more than a single session, which further implies this is a review.
+
+\subsubsection{Sports \& Games}
+\textbf{Title}:  MAGNUS vs DING!!!!!!!!!!!\\
+\textbf{Description}: BONUS CONTENT HERE:
+
+Get My Chess Courses: 
+Get my best-selling chess book: 
+
+My book in the UK and Europe: 
+Mein Buch auf Deutsch: 
+Mi libro en Espanol: 
+Start Playing Chess FOR FREE: 
+Enjoy my videos? Donate Here : 
+
+Email me your games: gothamletters@gmail.com
+\\
+\textbf{Reasoning}: Chess is a physical board game, so it will belong in Sports \& Games, as opposed to video games. However, if this was a chess videogame, we would categorize it as Video Games. 
+
+\subsubsection{Education}
+\textbf{Title}:  Bayes theorem, the geometry of changing beliefs\\
+\textbf{Description}: Perhaps the most important formula in probability.
+Help fund future projects:
+An equally valuable form of support is to simply share some of the videos.
+Special thanks to these supporters:
+Home page:
+
+The quick proof:
+
+Interactive made by Reddit user Thoggalluth:
+
+The study with Steve:\\
+\textbf{Reasoning}: This video is educational itself, and not on another category, so we will categorize as Education.
+
+\subsubsection{Vehicles}
+\textbf{Title}:  How to PROPERLY Install a Quick Release Steering Wheel (with Working Horn) \\
+\textbf{Description}: Learn how to change your steering wheel so you can remove your old steering wheel and replace it with a quick release steering wheel. In this video I show you how to remove the airbag and steering wheel and install a Momo steering hub, an NRG quick release hub and a racing steering wheel with push buttons for the horn and radio.
+Thanks @ThatDudeinBlue  for sharing your dangerous steering wheel footage!
+NEW ChrisFix swag: 
+Extendable Ratchet Set: \\
+\textbf{Reasoning}: Even though this video is educational, the primary topic of education is on cars. 
+
+\subsubsection{News}
+\textbf{Title}: Contempt for Trump ft. Liz Dye\\
+\textbf{Description}: "That's a lot of contempt Use code LEGALEAGLE50 to get 50\% OFF first box and free wellness shots for life with any active subscription: https://legaleagle.link/factor ‚ Need a great lawyer?
+Welcome back to LegalEagle.  The most avian legal analysis on the internets. 
+Watch my next video early \& ad-free on Nebula! 
+Suits by Indochino! 
+
+GOT A VIDEO IDEA? TELL ME! \\
+\textbf{Reasoning}: Although this video is educating the audience, it's topic is on US politics and covering recent events.
+
+\subsubsection{Health \& Fitness}
+\textbf{Title}:  The Bodybuilder Who Drinks Chicken Smoothies\\
+\textbf{Description}: Bodybuilder Rene Campbell eats the same high-calorie meal every three hours, seven days a week: a blended chicken shake.
+
+This smoothie blends chicken, rice, cabbage and eggs for one "delicious" (?) protein-heavy shake.
+
+Could you keep this drink down?
+
+\#bodybuilder \#gymtok \#girlwithmuscle \#diet \#gym \#fitness 
+
+Subscribe to MUNCHIES here: 
+\\
+\textbf{Reasoning}: Even if the format is somewhat like a documentary, the purpose of the documentary is on a bodybuilder and what they eat. It won't be Cooking/Food since the purpose isn't to promote the meal they make, or showcasing a recipe for their audience to follow.
+
+\subsubsection{Business}
+\textbf{Title}: Worldcoin, the sh*tcoin for humanity just launched \\
+\textbf{Description}: Worldcoin is a cryptocurrency that uses biometric iris data to verify people before making financial transactions. It is a controversial project co-founded by Sam Altman of OpenAI. Some call it a dystopian scam, while others believe it will make the global economy more equitable. 
+
+\#tech \#crypto \#thecodereport \#ai
+
+Chat with Me on Discord
+
+Resources
+
+Worldcoin 
+Worldcoin raises 115M  \\
+\textbf{Reasoning}: This video is about a financial vehicle, cryptocurrency. Even though it covers a recent event, the main message it about world economics and the financial markets.
 
 \section{Dataset}
-\subsection{Description}
-
+The dataset we are using is called \href{https://huggingface.co/datasets/AdamLucek/youtube-titles}{youtube-titles} by Adam Lucek from Hugging face. It contains 4.9k videos across 50 YouTube Channels sourced from 2024. The dataset is licensed under the MIT License.
+The following columns can be found in the dataset:
+\begin{itemize}
+  \item channel\_name: The name of the channel
+  \item channel\_url: The URL of the channel
+  \item channel\_id: The unique identifier of the channel
+  \item \textbf{video\_title}: The title of the video
+  \item video\_id: The unique identifier of the video
+  \item \textbf{video\_description}: First 500 characters of the video Description
+  \item prompt: Plausible prompt for generating this title (for LLM training)
+  \item gemma2\_9b\_it\_format: Formatted prompt and title combo for gemma 2 9b instruction tuned model fine tuning
+\end{itemize}
+We will only use the \texttt{video\_title} and \texttt{video\_description} columns, as bolded in the list above.
+The dataset is unlabeled for our classification purposes and will be stored as a csv file called \texttt{dataset.csv} in our GitHub repository, \href{https://github.com/thaafei/YouTubeCategories-4NL3}{YoutubeCategories-4NL3}, where each row represents one YouTube video.
 \subsection{Interesting Data Points}
 
 \subsection{Annotation Agreement}
@@ -43,7 +205,6 @@
 \section{Discussion Questions}
 \begin{enumerate}
   \item What did you learn about the task from doing the annotation?
-
   \item What challenges do you expect models to face when learning from your data?
   \item What surprising things did you observe in the data?
   \item Which features do you expect to be useful
