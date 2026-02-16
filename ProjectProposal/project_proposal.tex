@@ -41,15 +41,16 @@ so classifying videos by category accurately can help filter content. The catego
   \begin{enumerate}
     \item Food/Cooking
     \item Video Games
-    \item Sports
+    \item Sports \& Games
     \item Music
-    \item Documentary/Education
-    \item Shopping/Reviews
-    \item Autos/Vehicles
-    \item Lifestyle/Vlog
-    \item News/Current Events
-    \item Health/Fitness
-    \item Business/Finance
+    \item Education
+    \item Shopping
+    \item Vehicles
+    \item Lifestyle
+    \item News
+    \item Health \& Fitness
+    \item Business
+    \item Digital Media
   \end{enumerate}
 \end{multicols}
 These categories are determined from YouTube’s category list \href{https://mixedanalytics.com/blog/list-of-youtube-video-category-ids/}{(see here)} 
@@ -57,7 +58,7 @@ and our team’s own generalization. Most importantly, it will be interesting
 to analyze the shared commonalities of video titles and descriptions across 
 different categories. This task is challenging because most video titles do 
 not explicitly state their category and may depend on the channel’s niche 
-or current world events.To keep our labels consistent, we’ll write a short
+or current world events. To keep our labels consistent, we’ll write a short
 annotation guide with specific cues to look for, then
 have everyone in the team label the same starter
 set of headlines to line up our interpretations. Our
@@ -81,7 +82,7 @@ We do not plan to perform additional web scraping. Prior to modeling, we will ap
 (removing emojis, links, promo codes and text normalization). We will also remove all columns other than the video title and description.
 
 \subsection{Expected Dataset Size}
-We expect to use N = 4.2k examples. These are unlabeled, but we can use \href{youtube category checker tools}{https://tubepilot.ai/tools/youtube-category-checker/} to add labels for the remaining samples that our group didn't annotate by hand.
+We expect to use N = 1.5k examples. These are unlabeled, but we can use \href{youtube category checker tools}{https://tubepilot.ai/tools/youtube-category-checker/} to add labels for the remaining samples that our group didn't annotate by hand.
 We will create train/dev/test splits with an approximate 80/10/10 ratio (with the exact proportions determined by the outlet-based grouping constraint).
 
 As required, we provide three example data points with labels assigned by our group:
