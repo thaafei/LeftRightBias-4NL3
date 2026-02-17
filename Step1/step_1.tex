@@ -268,14 +268,23 @@ Below are several edge cases and dataset characteristics we found interesting du
 
 \section{Discussion Questions}
 \begin{enumerate}
-  \item What did you learn about the task from doing the annotation?
-  \item What challenges do you expect models to face when learning from your data?
-  \item What surprising things did you observe in the data?
-  \item Which features do you expect to be useful
-  \item Describe the mental model you came up with to do the task at a high level. What
-process did you use?
-  \item Was there anything unclear about the instructions? How would you recommend modi-
-fying them in the future to make them more helpful?
+  \item \textbf{What did you learn about the task from doing the annotation?}\\
+  We learned that a seemingly simple ``title + short description'' categorization task quickly becomes a primary-intent reasoning problem. Many titles are vague, and the first 500 characters of the description are often dominated by sponsor templates rather than topical content. As a result, annotators must decide what information is relevant signal versus noise. We also found that the ``specific over general'' guideline is essential for consistency (e.g., car repair tutorials should be categorized as \emph{Vehicles} rather than \emph{Education}). When descriptions are low-signal, titles tend to be the most stable cue.
+
+  \item \textbf{What challenges do you expect models to face when learning from your data?}\\
+  We expect models to struggle with low-signal descriptions dominated by URLs, discount codes, affiliate blocks, and social links, as well as vague titles that provide little topical context. Boundary cases will also be difficult because many instances plausibly fit multiple categories (for example, food challenges can resemble Food \& Cooking, Lifestyle, or even Shopping when products are involved). In addition, models may learn spurious correlations from non-topical cues such as \texttt{\#AD}, repeated brand names, or incidental ``music by'' credits. Since channel identity is disallowed, models cannot rely on creator/channel priors to resolve ambiguous cases, which may further increase confusion.
+
+  \item \textbf{What surprising things did you observe in the data?}\\
+  The most surprising observation was how frequently descriptions contain little to no topical signal due to sponsorship blocks and standardized templates. We also encountered systematic text noise such as mojibake and mixed scripts, where the title may appear corrupted while the description still contains usable hints. Another notable surprise was how strongly a few keywords can bias category judgments (e.g., \texttt{feat.} suggesting \emph{Music} or \texttt{install/steering wheel} suggesting \emph{Vehicles}), even when those cues are sometimes incidental metadata rather than the primary content.
+
+  \item \textbf{Which features do you expect to be useful?}\\
+  We expect high-signal lexical cues in the title to be most useful, including game names, ``recipe'', ``how to'', political figures, and product terms such as ``review'' or ``unboxing''. Domain-specific verbs (e.g., \texttt{install}, \texttt{workout}, \texttt{investing}) should help separate categories that all appear educational on the surface. For descriptions, keyword extraction after down-weighting or removing URLs and sponsor blocks should improve topical signal, and named entities (sports teams, politicians, game titles, product brands) can provide strong evidence for the correct category. Lightweight patterns such as tracklists and timestamped song lists may also be useful for identifying \emph{Music} when they reflect the primary intent.
+
+  \item \textbf{Describe the mental model you came up with to do the task at a high level. What process did you use?}\\
+  We used a two-stage ``intent then tie-break'' workflow. First, we inferred the primary intent by anchoring on the title and using the description to confirm or disambiguate when it added genuine topical information. Second, when multiple categories seemed plausible, we applied tie-break rules by choosing the more specific category, avoiding channel-based assumptions, and treating sponsor/link-heavy text as non-topical noise. In practice, this meant scanning titles for high-signal tokens, skimming descriptions for topic-confirming terms while ignoring ads, and resolving borderline cases by imagining where the video would most likely appear when browsing YouTube by category.
+
+  \item \textbf{Was there anything unclear about the instructions? How would you recommend modifying them in the future to make them more helpful?}\\
+  The instructions were mostly clear, but we recommend explicitly stating that sponsor-heavy description blocks and URL dumps should be ignored unless they add genuine topical information. We also recommend adding more guidance for common edge cases, such as Food versus Lifestyle versus Shopping, Gaming versus Digital Media, and News versus Education, either through additional examples or a short tie-break decision guide. Finally, it would help to state clearly that ``music by'' credits alone do not imply the \emph{Music} category, whereas tracklists and song-like formatting are stronger evidence of music as the primary content.
 \end{enumerate}
 
 
