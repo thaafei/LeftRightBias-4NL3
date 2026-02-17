@@ -266,6 +266,53 @@ Below are several edge cases and dataset characteristics we found interesting du
 
 \subsection{Annotation Agreement}
 
+To quantify label consistency on the double-annotated overlap set, we computed inter-annotator agreement on the subset of 
+rows where 2 labels were present. In the annotated region of 751 instances, 152 instances were double-labeled.
+
+\paragraph{Agreement metrics.}
+Because our labels are nominal (unordered) categories, we report both \textbf{Cohen's $\kappa$} (pairwise agreement 
+corrected for chance) and \textbf{Krippendorff's $\alpha$} (nominal), which naturally supports missing annotations 
+and is appropriate when not all items are annotated by the same number of coders. On the 152 overlapping instances, 
+the \textbf{overall observed agreement} was $P_o=0.2961$, with \textbf{expected agreement} $P_e=0.1577$, yielding 
+\textbf{Cohen's $\kappa = 0.1643$}. Using Krippendorff's $\alpha$ (nominal) on the same overlap set (items with 
+$\ge 2$ ratings), we obtained \textbf{$\alpha = 0.1640$} (with $D_o=0.7039$, $D_e=0.8421$). These values indicate 
+\emph{low-to-moderate} agreement and suggest that many items remain ambiguous under our current category boundaries.
+
+\paragraph{Segmented overlap analysis.}
+Our annotation process used a ``downstream'' workflow with three annotators labeling different contiguous sections 
+of the dataset and overlapping only on short boundary windows. Since overall $\kappa$ can obscure this structure, 
+we additionally computed \textbf{pairwise $\kappa$ separately for each contiguous overlap segment} (detected as 
+consecutive row-id blocks where both labels exist). The results show substantial variation:
+\begin{itemize}
+  \item \textbf{Segment 1 (rows 0--50, $n=51$):} $P_o=0.5882$, $P_e=0.1288$, $\kappa=0.5274$.
+  \item \textbf{Segment 2 (rows 248--298, $n=51$):} $P_o=0.0980$, $P_e=0.1807$, $\kappa=-0.1009$.
+  \item \textbf{Segment 3 (rows 498--547, $n=50$):} $P_o=0.2000$, $P_e=0.1788$, $\kappa=0.0258$.
+\end{itemize}
+Segment~1 shows reasonably strong agreement, while Segments~2 and~3 show near-zero (or slightly negative) 
+$\kappa$, meaning agreement is at or below what would be expected by chance given each annotator's label 
+distribution. This segment-level divergence is consistent with annotators developing slightly different 
+interpretations of category boundaries over time, and/or differences in the difficulty or composition of 
+examples in each window.
+
+\paragraph{Where disagreements occur.}
+The confusion matrix and sampled disagreements suggest that most inconsistencies arise from \textbf{boundary ambiguity} 
+rather than random noise. Common confusions include:
+\begin{itemize}
+  \item \textbf{Lifestyle vs.\ Education} (e.g., ``day-in-the-life'' or experience narratives that also include explanatory content).
+  \item \textbf{Education vs.\ Video Games / Sports \& Games} (e.g., puzzle/strategy/game content framed as ``explaining'' or ``learning'').
+  \item \textbf{Digital Media vs.\ Music / Shopping} (e.g., shorts or edits that include music but are not primarily a music video; product-focused titles with entertainment framing).
+  \item \textbf{Food \& Cooking vs.\ Education / Shopping} (e.g., historical-origin or explanatory food videos; liquor/food product series that resemble reviews).
+\end{itemize}
+We also note that the label distributions in the overlap set are imbalanced (e.g., \emph{Lifestyle} and 
+\emph{Education} dominate), which can depress chance-corrected agreement by increasing the probability of 
+systematic boundary disagreements.
+
+\paragraph{Implications.}
+Overall, the low-to-moderate agreement ($\kappa \approx 0.16$, $\alpha \approx 0.16$) suggests that the task is 
+non-trivial given only titles and truncated descriptions, and that additional tie-break rules or more examples 
+may be needed for the most frequently confused category pairs (especially \emph{Lifestyle} vs.\ \emph{Education}, 
+and \emph{Education} vs.\ game-related categories).
+
 \section{Discussion Questions}
 \begin{enumerate}
   \item \textbf{What did you learn about the task from doing the annotation?}\\
