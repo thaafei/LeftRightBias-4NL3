@@ -22,7 +22,8 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{amsmath, amssymb}
-
+\usepackage[utf8]{inputenc}
+\DeclareUnicodeCharacter{0090}{}
 
 
 \title{Group 42 Progress Step One:\\ Category Detection of YouTube Videos}
@@ -214,7 +215,54 @@ The following columns can be found in the dataset:
 \end{itemize}
 We will only use the \texttt{video\_title} and \texttt{video\_description} columns, as bolded in the list above.
 The dataset is unlabeled for our classification purposes and will be stored as a csv file called \texttt{dataset.csv} in our GitHub repository, \href{https://github.com/thaafei/YouTubeCategories-4NL3}{YoutubeCategories-4NL3}, where each row represents one YouTube video.
+
 \subsection{Interesting Data Points}
+
+We conducted an initial annotation round following our instructions in Section~1. Each of the three annotators spent 
+approximately 1 hour labeling instances using only the \texttt{video\_title} and the first 500 characters of 
+\texttt{video\_description}. In this 1-hour estimate, each annotator labeled roughly 250 instances, for about 
+750 unique labeled videos in total. Following the recommended overlap procedure, we additionally re-annotated 
+20\% of the unique set (150 instances) as a double-annotated overlap set for later agreement calculations.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lr@{}}
+\toprule
+Quantity & Estimate (1-hour guideline) \\
+\midrule
+\# annotators & 3 \\
+Time spent annotating & $\approx$ 1 hour per annotator \\
+Unique instances labeled & $\approx 750$ (3 $\times$ 250) \\
+Overlap instances (double-annotated) & $\approx 150$ (20\% of 750) \\
+Total annotation decisions & $\approx 900$ (750 + 150) \\
+Avg. time per instance & $\approx 14.4$ seconds (3600 / 250) \\
+\bottomrule
+\end{tabular}
+\caption{Estimated annotation volume and speed (update with final counts once annotation is complete).}
+\end{table}
+
+Below are several edge cases and dataset characteristics we found interesting during annotation, because they create ambiguity even with detailed category guidelines.
+
+\begin{enumerate}
+  \item \textbf{Sponsor-heavy descriptions that contain little to no topical signal.} \\
+  Example: \\
+  \textbf{Title:} \emph{I made him cry..}\\
+  The corresponding description is dominated by sponsor/affiliate content (e.g., discount codes and links), with minimal information about what happens in the video. This is interesting because our rules require using both title and description, but in practice the description can be uninformative noise. When the title is also vague, the instance becomes difficult to label without channel context (which we explicitly disallow). This suggests models may need robustness to “ad-only” or low-signal descriptions.
+
+  \item \textbf{Mixed-intent videos that sit between multiple categories (boundary ambiguity).}\\
+  Example: \\
+  \textbf{Title:} \emph{Eating McDonald's Happy Meals until I get EVERY POKEMON CARD!!}\\
+  This single instance plausibly overlaps multiple categories: it involves \emph{food/eating}, a \emph{collecting challenge} (which can resemble Lifestyle/entertainment), and \emph{Pok\'emon} (which can cue Video Games or Digital Media depending on interpretation). This is interesting because our category list does not include a generic “Entertainment/Challenges” label, so annotators must map these videos to the \emph{closest primary intent} category. These boundary cases are likely to be a major source of annotator disagreement.
+
+  \item \textbf{Non-English titles and mixed-script text that can still strongly signal a category.}\\
+  Example: \\
+  \textbf{Title:} \emph{å¼·é¢¨ã‚ªãƒ¼ãƒ«ãƒãƒƒã‚¯[ãƒ™ãƒ¼ã‚¹]}\\
+  \textbf{Description:} \emph{Yukopi - å¼·é¢¨ã‚ªãƒ¼ãƒ«ãƒãƒƒã‚¯ (feat.\,æ­Œæ„›ãƒ¦ã‚­) but it's on BASS \ldots}\\
+  This instance is interesting because the title appears garbled (likely due to text encoding issues), and it contains non-English characters and mixed scripts. Despite this, the description includes clear musical cues (artist name, track-like formatting, ``feat.'', and ``on BASS''), making \textbf{Music} the most plausible label. This suggests that models and annotators may need to rely on sparse but high-signal keywords (e.g., ``feat.'', instrument mentions) and be robust to multilingual or corrupted text when determining categories.
+
+  \item \textbf{Systematic text noise in scraped metadata (URLs, mojibake, and symbols) that affects preprocessing.}
+  Beyond individual multilingual examples, we observed that many descriptions include heavy URL blocks, affiliate text, and occasional mojibake/encoding artifacts (e.g., corrupted arrows or emoji sequences). This is interesting because it can reduce the effective semantic signal available for classification and can distort tokenization, causing models to overweight frequent non-content tokens (URLs, codes, repeated symbols). This suggests we may want to normalize Unicode, standardize or remove URLs, and apply consistent truncation or filtering rules for descriptions in later experiments.
+\end{enumerate}
 
 \subsection{Annotation Agreement}
 
