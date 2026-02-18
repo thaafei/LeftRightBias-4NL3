@@ -200,6 +200,13 @@ Find my podcast here â†’ @FearAndPodcast
 Edited by:  https://twitter.com/jookien  \\
 \textbf{Reasoning}: This video is about movies and is a fan made digital piece of media.
 
+\subsection{Interface}
+We use a spreadsheet (CSV) interface for annotation. We add two new columns to the dataset:
+\texttt{category} and \texttt{second\_annotator\_category}. The primary annotator records their label in
+\texttt{category}, and the secondary annotator records their label in \texttt{second\_annotator\_category}.
+Each row must contain exactly one label from our 12-category set, based only on the video title and the first
+500 characters of the video description.
+
 \section{Dataset}
 The dataset we are using is called \href{https://huggingface.co/datasets/AdamLucek/youtube-titles}{youtube-titles} by Adam Lucek from Hugging face. It contains 4.9k videos across 50 YouTube Channels sourced from 2024. The dataset is licensed under the MIT License.
 The following columns can be found in the dataset:
