@@ -4,10 +4,17 @@ import time
 import json
 import pandas as pd
 
-input_dir = '/app/input_data/'
-output_dir = '/app/output/'
-program_dir = '/app/program'
-submission_dir = '/app/ingested_program'
+# coda
+# input_dir = '/app/input_data/'
+# output_dir = '/app/output/'
+# program_dir = '/app/program'
+# submission_dir = '/app/ingested_program'
+
+# local
+input_dir = '../app/input_data/'
+output_dir = '../app/output/'
+program_dir = '../app/program'
+submission_dir = '../app/ingested_program'
 
 sys.path.append(program_dir)
 sys.path.append(submission_dir)
@@ -32,7 +39,7 @@ def get_prediction_data():
 
 
 def main():
-    from model import Model
+    from codabench.bettermodel.model import Model
     print('Reading Data')
     X_train, y_train = get_training_data()
     X_test = get_prediction_data()
