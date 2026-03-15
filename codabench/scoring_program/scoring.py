@@ -5,9 +5,10 @@ from sklearn.metrics import f1_score
 
 reference_dir = os.path.join('/app/input/', 'ref')
 prediction_dir = os.path.join('/app/input/', 'res')
+score_dir = '/app/output/'
 # reference_dir = os.path.join("./app/reference_data/")
 # prediction_dir = os.path.join("./app/output/")
-score_dir = '/app/output/'
+
 
 print('Reading prediction')
 

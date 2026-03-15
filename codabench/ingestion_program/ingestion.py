@@ -4,10 +4,10 @@ import time
 
 import pandas as pd
 
-input_dir = 'app/input_data/'
-output_dir = 'app/output/'
-program_dir = 'app/program'
-submission_dir = 'app/ingested_program'
+input_dir = '/app/input_data/'
+output_dir = '/app/output/'
+program_dir = '/app/program'
+submission_dir = '/app/ingested_program'
 
 sys.path.append(program_dir)
 sys.path.append(submission_dir)
