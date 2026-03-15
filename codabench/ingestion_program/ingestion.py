@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-
+import json
 import pandas as pd
 
 input_dir = '/app/input_data/'
@@ -56,6 +56,9 @@ def main():
         index=False,
         header=False
     )
+    with open(os.path.join(output_dir, 'metadata.json'), 'w+') as f:
+        json.dump({'duration': duration}, f)
+    print()
     print('Ingestion Program finished. Moving on to scoring')
 
 
