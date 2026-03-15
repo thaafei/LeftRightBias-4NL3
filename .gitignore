@@ -5,3 +5,5 @@
 *.bst
 *.log
 *venv
+codabench/app/output/metadata.json
+codabench/__pycache__/model.cpython-312.pyc
