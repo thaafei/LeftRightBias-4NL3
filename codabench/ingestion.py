@@ -1,15 +1,13 @@
-import json
 import os
 import sys
 import time
 
-import numpy as np
 import pandas as pd
 
-input_dir = './app/input_data/'
-output_dir = './app/output/'
-program_dir = './app/program'
-submission_dir = './app/ingested_program'
+input_dir = 'app/input_data/'
+output_dir = 'app/output/'
+program_dir = 'app/program'
+submission_dir = 'app/ingested_program'
 
 sys.path.append(program_dir)
 sys.path.append(submission_dir)
@@ -19,7 +17,7 @@ def get_training_data():
     X_train = pd.read_csv(os.path.join(input_dir, "training_data.csv"), keep_default_na=False, dtype=str)
     y_train = pd.read_csv(os.path.join(input_dir, 'training_label.csv'), keep_default_na=False, dtype=str)
 
-    # Display the first 10 rows
+    # Display the first 5 rows
     print("Sample Training Data")
     print(X_train.head())
     print(y_train.head())
@@ -53,10 +51,11 @@ def main():
     print('-' * 10)
     print(f'Completed Prediction. Total duration: {duration}')
 
-    np.savetxt(os.path.join(output_dir, 'prediction'), prediction, fmt='%s')
-    with open(os.path.join(output_dir, 'metadata.json'), 'w+') as f:
-        json.dump({'duration': duration}, f)
-    print()
+    pd.DataFrame(prediction).to_csv(
+        os.path.join(output_dir, "prediction.csv"),
+        index=False,
+        header=False
+    )
     print('Ingestion Program finished. Moving on to scoring')
 
 
