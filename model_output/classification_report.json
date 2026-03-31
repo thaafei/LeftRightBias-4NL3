@@ -1,0 +1,87 @@
+{
+  "Business": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 1.0
+  },
+  "Digital Media": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 9.0
+  },
+  "Education": {
+    "precision": 0.56,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.6086956521739131,
+    "support": 21.0
+  },
+  "Food & Cooking": {
+    "precision": 0.6,
+    "recall": 1.0,
+    "f1-score": 0.75,
+    "support": 3.0
+  },
+  "Health": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 0.0
+  },
+  "Lifestyle": {
+    "precision": 0.5405405405405406,
+    "recall": 0.7692307692307693,
+    "f1-score": 0.6349206349206349,
+    "support": 26.0
+  },
+  "Music": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1-score": 0.0,
+    "support": 2.0
+  },
+  "News": {
+    "precision": 0.5,
+    "recall": 0.4,
+    "f1-score": 0.4444444444444444,
+    "support": 5.0
+  },
+  "Shopping": {
+    "precision": 1.0,
+    "recall": 0.3333333333333333,
+    "f1-score": 0.5,
+    "support": 9.0
+  },
+  "Sports & Games": {
+    "precision": 0.6666666666666666,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.6666666666666666,
+    "support": 9.0
+  },
+  "Vehicle": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 2.0
+  },
+  "Video Games": {
+    "precision": 0.42857142857142855,
+    "recall": 0.6,
+    "f1-score": 0.5,
+    "support": 5.0
+  },
+  "accuracy": 0.5760869565217391,
+  "macro avg": {
+    "precision": 0.4413148863148863,
+    "recall": 0.45299145299145294,
+    "f1-score": 0.4253939498504716,
+    "support": 92.0
+  },
+  "weighted avg": {
+    "precision": 0.5354012086620783,
+    "recall": 0.5760869565217391,
+    "f1-score": 0.530030080715336,
+    "support": 92.0
+  }
+}
