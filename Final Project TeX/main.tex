@@ -109,7 +109,7 @@ Table~\ref{tab:results} presents the performance of all models on the validation
 \midrule
 Baseline & 0.272 & --- & --- \\
 DistilBERT & 0.576 & 0.530 & 0.425 \\
-Flan-T5 (zero-shot) & 0.455 & --- & --- \\
+Flan-T5 (zero-shot) & 0.460 & 0.460 & 0.330 \\
 MiniLM & 0.552 & 0.526 & 0.483 \\
 \bottomrule
 \end{tabular}
@@ -119,7 +119,7 @@ MiniLM & 0.552 & 0.526 & 0.483 \\
 
 The DistilBERT model achieved a validation accuracy of 57.6\% and a weighted F1 of 0.530 after 5 epochs of fine-tuning, substantially outperforming the majority-class baseline (micro F1 = 0.272 on the Codabench test set). Training accuracy reached 75.0\% by the final epoch, while validation accuracy plateaued around 57.6\%, suggesting some overfitting to the training data. Per-category performance varied widely: Vehicle (F1 = 1.00) and Food \& Cooking (F1 = 0.75) achieved high scores, while Digital Media (F1 = 0.00), Business (F1 = 0.00), and Music (F1 = 0.00) had zero F1 due to their very low support in the validation set.
 
-The Flan-T5-Large model, used in a zero-shot setting, achieved a test accuracy of 45.5\% with its best prompt (Prompt~2). Among three prompt variants, the basic prompt scored 31.5\%, the detailed prompt with sub-topic examples scored 46.0\%, and the title-only prompt scored 38.0\% on a 200-sample subset of the training data (acceptable for a zero-shot model that performs no training). While the zero-shot approach avoids training costs entirely, its accuracy is limited by the model's inability to adapt to the specific category definitions and data distribution of our task.
+The Flan-T5-Large model, used in a zero-shot setting, achieved a test accuracy of 46.0\%, weighted F1 of 0.460, and macro F1 of 0.330 with its best prompt (Prompt~2). Among three prompt variants, the basic prompt scored 31.5\%, the detailed prompt with sub-topic examples scored 46.0\%, and the title-only prompt scored 38.0\% on a 200-sample subset of the training data (acceptable for a zero-shot model that performs no training). While the zero-shot approach avoids training costs entirely, its performance is limited by the model's inability to adapt to the specific category definitions and data distribution of our task.
 
 The MiniLM model achieved a test accuracy of 55.2\%, weighted F1 of 0.526, and macro F1 of 0.483. Class-weighted training helped balance performance across categories. Early stopping based on macro F1 prevented overfitting, and the use of balanced class weights in the loss function improved recall for underrepresented classes.
 
@@ -141,7 +141,7 @@ Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabe
 DistilBERT (ours, local) & 0.576 & 0.530 \\
 MiniLM (ours, local) & 0.552 & 0.526 \\
 dingz37 (Codabench) & --- & 0.530 \\
-Flan-T5 zero-shot (ours, local) & 0.455 & --- \\
+Flan-T5 zero-shot (ours, local) & 0.460 & 0.460 \\
 TF-IDF + LogReg (ours, Codabench) & --- & 0.401 \\
 Baseline (ours, Codabench) & --- & 0.272 \\
 \bottomrule
@@ -150,7 +150,7 @@ Baseline (ours, Codabench) & --- & 0.272 \\
 \label{tab:codabench}
 \end{table}
 
-Our fine-tuned DistilBERT (F1 = 0.530) matches the top Codabench entry from dingz37, while MiniLM (F1 = 0.526) is close behind. The gap between our TF-IDF submission (F1 = 0.401) and dingz37 (F1 = 0.530) suggests that traditional ML can perform well with better feature engineering or ensemble methods. The zero-shot Flan-T5 (accuracy = 0.455), while respectable without any training, falls short of fine-tuned models, highlighting the importance of task-specific adaptation.
+Our fine-tuned DistilBERT (F1 = 0.530) matches the top Codabench entry from dingz37, while MiniLM (F1 = 0.526) is close behind. The gap between our TF-IDF submission (F1 = 0.401) and dingz37 (F1 = 0.530) suggests that traditional ML can perform well with better feature engineering or ensemble methods. The zero-shot Flan-T5 (weighted F1 = 0.460), while respectable without any training, falls short of fine-tuned models, highlighting the importance of task-specific adaptation.
 
 \section{Error Analysis}
 
