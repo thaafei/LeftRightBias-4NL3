@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-We address the task of classifying YouTube videos into one of 12 primary categories using only the video title and description. We compare three distinct approaches: (1) fine-tuning DistilBERT for sequence classification, (2) zero-shot prompting with Flan-T5-Large, and (3) fine-tuning MiniLM with class-weighted training. Our experiments show that the fine-tuned transformer models substantially outperform both the majority-class baseline (F1 = 0.326) and the zero-shot prompting approach. We analyze the strengths and weaknesses of each method and discuss common error patterns arising from category ambiguity.
+We address the task of classifying YouTube videos into one of 12 primary categories using only the video title and description. We compare three distinct approaches: (1) fine-tuning DistilBERT for sequence classification, (2) zero-shot prompting with Flan-T5-Large, and (3) fine-tuning MiniLM with class-weighted training. Our experiments show that the fine-tuned transformer models substantially outperform both the majority-class baseline (F1 = 0.272) and the zero-shot prompting approach. We analyze the strengths and weaknesses of each method and discuss common error patterns arising from category ambiguity.
 \end{abstract}
 
 \section{Introduction}
@@ -74,7 +74,7 @@ Our three models employ different feature representation strategies:
 
 \subsection{Baseline}
 
-Our baseline is a majority-class classifier that always predicts the most frequent category in the training set. This achieved a micro-averaged F1 score of 0.326 on the test set.
+Our baseline is a majority-class classifier that always predicts the most frequent category in the training set. This achieved a micro-averaged F1 score of 0.272 on the test set.
 
 \subsection{Model 1: Fine-Tuned DistilBERT}
 
@@ -117,7 +117,7 @@ MiniLM & 0.552 & 0.526 & 0.483 \\
 \label{tab:results}
 \end{table}
 
-The DistilBERT model achieved a validation accuracy of 57.6\% and a weighted F1 of 0.530 after 5 epochs of fine-tuning, substantially outperforming the majority-class baseline (micro F1 = 0.326 on the Codabench test set). Training accuracy reached 75.0\% by the final epoch, while validation accuracy plateaued around 57.6\%, suggesting some overfitting to the training data. Per-category performance varied widely: Vehicle (F1 = 1.00) and Food \& Cooking (F1 = 0.75) achieved high scores, while Digital Media (F1 = 0.00), Business (F1 = 0.00), and Music (F1 = 0.00) had zero F1 due to their very low support in the validation set.
+The DistilBERT model achieved a validation accuracy of 57.6\% and a weighted F1 of 0.530 after 5 epochs of fine-tuning, substantially outperforming the majority-class baseline (micro F1 = 0.272 on the Codabench test set). Training accuracy reached 75.0\% by the final epoch, while validation accuracy plateaued around 57.6\%, suggesting some overfitting to the training data. Per-category performance varied widely: Vehicle (F1 = 1.00) and Food \& Cooking (F1 = 0.75) achieved high scores, while Digital Media (F1 = 0.00), Business (F1 = 0.00), and Music (F1 = 0.00) had zero F1 due to their very low support in the validation set.
 
 The Flan-T5-Large model, used in a zero-shot setting, achieved a test accuracy of 45.5\% with its best prompt (Prompt~2). Among three prompt variants, the basic prompt scored 31.5\%, the detailed prompt with sub-topic examples scored 46.0\%, and the title-only prompt scored 38.0\% on a 200-sample subset of the training data (acceptable for a zero-shot model that performs no training). While the zero-shot approach avoids training costs entirely, its accuracy is limited by the model's inability to adapt to the specific category definitions and data distribution of our task.
 
@@ -129,7 +129,7 @@ All three fine-tuned/prompted models substantially outperform the majority-class
 
 We hosted our classification task on Codabench, where participants submit an untrained model that is trained and evaluated on the platform using micro-averaged F1. The competition platform uses the Docker image \texttt{codalab/codalab-legacy:py37}, which only has scikit-learn and standard Python libraries---PyTorch and HuggingFace Transformers are unavailable. This constraint means only traditional ML models can be submitted.
 
-Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (F1 = 0.401) and a custom TF-IDF + Softmax model (F1 = 0.272). The only external participant, \textit{dingz37}, achieved F1 = 0.530, outperforming both. Our three locally trained models---DistilBERT, MiniLM, and Flan-T5---could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
+Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (F1 = 0.401) and a majority-class baseline (F1 = 0.272). The only external participant, \textit{dingz37}, achieved F1 = 0.530, outperforming both. Our three locally trained models---DistilBERT, MiniLM, and Flan-T5---could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
 
 \begin{table}[t]
 \centering
@@ -143,7 +143,7 @@ MiniLM (ours, local) & 0.552 & 0.526 \\
 dingz37 (Codabench) & --- & 0.530 \\
 Flan-T5 zero-shot (ours, local) & 0.455 & --- \\
 TF-IDF + LogReg (ours, Codabench) & --- & 0.401 \\
-TF-IDF + Softmax (ours, Codabench) & --- & 0.272 \\
+Baseline (ours, Codabench) & --- & 0.272 \\
 \bottomrule
 \end{tabular}
 \caption{All models ranked by F1. Codabench entries use micro-averaged F1; local models use weighted F1. These metrics differ but are shown together for reference.}
