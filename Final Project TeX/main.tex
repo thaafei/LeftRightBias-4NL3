@@ -15,7 +15,7 @@
 \title{Primary YouTube Video Category Detection\\from Titles and Descriptions}
 
 \author{Tianjiao Xiao, Fei Xie, Ahren Chen \\
-  \texttt{\{xiaog6,xie99,chena127\}@mcmaster.ca} }
+  \texttt{\{xiaot13, xief17, chena125\}@mcmaster.ca} }
 
 \begin{document}
 \maketitle
@@ -44,7 +44,7 @@ Video and social media content classification has been explored in several works
 
 \subsection{Data Source and Collection}
 
-Our dataset originates from the ``youtube-titles'' dataset on HuggingFace, published by Adam Lucek under the MIT license. We sampled approximately 4,900 YouTube videos and extracted two text fields for each: the video title and the video description (truncated to the first 500 characters). 
+Our dataset originates from the ``\href{https://huggingface.co/datasets/AdamLucek/youtube-titles}{youtube-titles}'' dataset on HuggingFace, published by Adam Lucek under the MIT license. We sampled approximately 4,900 YouTube videos and extracted two text fields for each: the video title and the video description (truncated to the first 500 characters). 
 
 \subsection{Annotation}
 
@@ -84,9 +84,9 @@ We fine-tune DistilBERT-base-uncased \citep{sanh2019distilbert} for 12-class seq
 
 We use Flan-T5-Large \citep{chung2022scaling} in a zero-shot prompting setup---no fine-tuning is performed. The model receives a structured prompt listing all 12 categories with example sub-topics and outputs the corresponding category number. We experimented with three prompt designs:
 \begin{itemize}
-    \item \textbf{Prompt 1:} Basic classification with category names and general instructions.
-    \item \textbf{Prompt 2:} Detailed categories with example sub-topics (e.g., ``Video Games: Gameplay, Game Reviews, Streaming Highlights'').
-    \item \textbf{Prompt 3:} Title-only classification (description omitted).
+  \item \textbf{\nameref{prompt-one}:} Basic classification with category names and general instructions.
+  \item \textbf{\nameref{prompt-two}:} Detailed categories with example sub-topics (e.g., ``Video Games: Gameplay, Game Reviews, Streaming Highlights'').
+  \item \textbf{\nameref{prompt-three}:} Title-only classification (description omitted).
 \end{itemize}
 The best-performing prompt (Prompt 2) was selected for final evaluation on the full test set. The output is parsed via regex to extract the predicted category number.
 
@@ -192,6 +192,66 @@ For future work, we suggest: (1) collecting more training data, especially for u
 \textbf{Ahren Chen} implemented the MiniLM fine-tuning pipeline with class-weighted training, including text cleaning, balanced class weight computation, custom weighted trainer, and early stopping. He also contributed to dataset annotation and analysis.
 
 All three team members participated in the initial data annotation, annotation guideline development, and report writing.
+
+\section*{Appendix - Detailed Zero-Shot Detailed Prompts}
+  The following are the exact prompts used for the Flan-T5-Large model. They are instructed to return a number for the category, which allows us to save token space.
+  The returned number is matched with the corresponding category name post-prompt. The prompts are injected with the video's title and description for each data before being feed into the model.
+  \subsection{Prompt 1}\label{prompt-one}
+    You are a topic classifier. You will be given a youtube title and it's description. You must categorize it as one of the following categories: 
+    \\1: Food \& Cooking
+    \\2: Video Games
+    \\3: Sports \& Games
+    \\4: Music
+    \\5: Education
+    \\6: Shopping
+    \\7: Vehicles
+    \\8: Lifestyle
+    \\9: News
+    \\10: Health
+    \\11: Business
+    \\12: Digital Media
+    
+    The task is to answer the classification question, "What is the main category of this YouTube video?". You can achieve this by reading both the title and description in order to determine the most probably category. If a video title and description don't align, place more emphasize on the title.
+    Answer only with the corresponding number of the category names.
+    Here is the title: \$title
+    Here is the description: \$description
+  \subsection{Prompt 2}\label{prompt-two}
+  Given a youtube title and it's description. You must categorize it as one of the following categories, with corresponding topics that fit in the category: 
+    \\1: Food \& Cooking: Recipe, Cooking Technique
+    \\2: Video Games: Gameplay, Game Reviews, Streaming Highlights
+    \\3: Sports \& Games: Sport Games, Commentary, Board Games, Training Specific to Sport
+    \\4: Music: Music Videos, Karaoke Videos
+    \\5. Education: School Coursework, Math, General Knowledge Videos, Documentary
+    \\6: Shopping: Product Reviews, Shopping Hauls
+    \\7: Vehicles: Car Shows, Racing
+    \\8: Lifestyle: Traveling, Day-in-the-life, Vlogs
+    \\9: News: Politics, Breaking News, Current Events
+    \\10: Health \& Fitness: Gym, Workout Plans, Diet
+    \\11: Business: Investing, Economy, Entrepreneurship, Finance
+    \\12: Digital Media: Movies, Animated Shorts, Fan Fiction, Memes
+
+    The task is to answer the classification question, "What is the main category of this YouTube video?". You can achieve this by reading both the title and description in order to determine the most probably category. If a video title and description don't align, place more emphasize on the title.
+    Answer only with the corresponding number of the category names.
+    Here is the title: \$title
+    Here is the description: \$description
+  \subsection{Prompt 3}\label{prompt-three}
+  Given a youtube title. You must categorize it as one of the following categories, with corresponding topics that fit in the category: 
+    \\1: Food \& Cooking: Recipe, Cooking Technique
+    \\2: Video Games: Gameplay, Game Reviews, Streaming Highlights
+    \\3: Sports \& Games: Sport Games, Commentary, Board Games, Training Specific to Sport
+    \\4: Music: Music Videos, Karaoke Videos
+    \\5. Education: School Coursework, Math, General Knowledge Videos, Documentary
+    \\6: Shopping: Product Reviews, Shopping Hauls
+    \\7: Vehicles: Car Shows, Racing
+    \\8: Lifestyle: Traveling, Day-in-the-life, Vlogs
+    \\9: News: Politics, Breaking News, Current Events
+    \\10: Health \& Fitness: Gym, Workout Plans, Diet
+    \\11: Business: Investing, Economy, Entrepreneurship, Finance
+    \\12: Digital Media: Movies, Animated Shorts, Fan Fiction, Memes
+
+    The task is to answer the classification question, "What is the main category of this YouTube video?". You can achieve this by reading the tile.
+    Answer only with the corresponding number of the category names.
+    Here is the title: \$title
 
 \bibliography{custom}
 
