@@ -129,7 +129,7 @@ All three fine-tuned/prompted models substantially outperform the majority-class
 
 We hosted our classification task on Codabench, where participants submit an untrained model that is trained and evaluated on the platform using micro-averaged F1. The competition platform uses the Docker image \texttt{codalab/codalab-legacy:py37}, which only has scikit-learn and standard Python libraries---PyTorch and HuggingFace Transformers are unavailable. This constraint means only traditional ML models can be submitted.
 
-Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (F1 = 0.401) and a majority-class baseline (F1 = 0.272). The only external participant, \textit{dingz37}, achieved F1 = 0.530, outperforming both. Our three locally trained models---DistilBERT, MiniLM, and Flan-T5---could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
+Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (F1 = 0.401) and a majority-class baseline (F1 = 0.272). The only external participant, \textit{dingz37}, achieved F1 = 0.530 on Codabench. Through communication with dingz37, we obtained their full local results: their best model was a fine-tuned DistilBERT-base-uncased (accuracy = 0.581, macro F1 = 0.478), followed by a Bag-of-Words classifier (accuracy = 0.473, macro F1 = 0.313). They also tested two zero-shot models---BART-large-MNLI and DeBERTa-v3---which scored below 0.32 macro F1. Our three locally trained models could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
 
 \begin{table}[t]
 \centering
@@ -140,6 +140,8 @@ Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabe
 \midrule
 DistilBERT (ours, local) & 0.576 & 0.530 \\
 MiniLM (ours, local) & 0.552 & 0.526 \\
+dingz37: DistilBERT (local) & 0.581 & 0.478 \\
+dingz37: BoW Classifier (local) & 0.473 & 0.313 \\
 dingz37 (Codabench) & --- & 0.530 \\
 Flan-T5 zero-shot (ours, local) & 0.460 & 0.460 \\
 TF-IDF + LogReg (ours, Codabench) & --- & 0.401 \\
@@ -150,7 +152,7 @@ Baseline (ours, Codabench) & --- & 0.272 \\
 \label{tab:codabench}
 \end{table}
 
-Our fine-tuned DistilBERT (F1 = 0.530) matches the top Codabench entry from dingz37, while MiniLM (F1 = 0.526) is close behind. The gap between our TF-IDF submission (F1 = 0.401) and dingz37 (F1 = 0.530) suggests that traditional ML can perform well with better feature engineering or ensemble methods. The zero-shot Flan-T5 (weighted F1 = 0.460), while respectable without any training, falls short of fine-tuned models, highlighting the importance of task-specific adaptation.
+Our fine-tuned DistilBERT (F1 = 0.530) matches the top Codabench entry from dingz37, while MiniLM (F1 = 0.526) is close behind. Notably, dingz37 also fine-tuned DistilBERT locally, achieving a comparable accuracy of 58.1\% and macro F1 of 0.478. Their BoW classifier (accuracy = 47.3\%) outperformed our TF-IDF + LogReg submission (F1 = 0.401) on Codabench, suggesting that simpler models with careful feature engineering can be competitive. The zero-shot Flan-T5 (weighted F1 = 0.460), while respectable without any training, falls short of fine-tuned models, highlighting the importance of task-specific adaptation.
 
 \section{Error Analysis}
 
