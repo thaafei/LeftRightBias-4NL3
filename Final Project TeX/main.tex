@@ -74,7 +74,7 @@ Our three models employ different feature representation strategies:
 
 \subsection{Baseline}
 
-Our baseline is a majority-class classifier that always predicts the most frequent category in the training set. This achieved a micro-averaged F1 score of 0.272 on the test set.
+Our baseline is a majority-class classifier that always predicts the most frequent category in the training set. This achieved an accuracy of 0.272 (micro F1 = 0.272) and a macro F1 of only 0.036 on the test set, reflecting the extreme class imbalance.
 
 \subsection{Model 1: Fine-Tuned DistilBERT}
 
@@ -107,13 +107,14 @@ Table~\ref{tab:results} presents the performance of all models on the validation
 \toprule
 \textbf{Model} & \textbf{Acc.} & \textbf{F1\textsubscript{W}} & \textbf{F1\textsubscript{M}} \\
 \midrule
-Baseline & 0.272 & --- & --- \\
+Baseline & 0.272 & --- & 0.036 \\
+TF-IDF + LogReg & 0.405 & --- & 0.232 \\
 DistilBERT & 0.576 & 0.530 & 0.425 \\
 Flan-T5 (zero-shot) & 0.460 & 0.460 & 0.330 \\
 MiniLM & 0.552 & 0.526 & 0.483 \\
 \bottomrule
 \end{tabular}
-\caption{Model results. DistilBERT is evaluated on the validation set (92 samples); MiniLM and Flan-T5 on the test set (279 samples). F1\textsubscript{W} = weighted F1; F1\textsubscript{M} = macro F1.}
+\caption{Model results. Baseline and TF-IDF + LogReg are evaluated on the Codabench test set; DistilBERT on the validation set (92 samples); MiniLM and Flan-T5 on the test set (279 samples). F1\textsubscript{W} = weighted F1; F1\textsubscript{M} = macro F1. For Baseline and TF-IDF + LogReg, micro F1 equals accuracy.}
 \label{tab:results}
 \end{table}
 
@@ -129,7 +130,7 @@ All three fine-tuned/prompted models substantially outperform the majority-class
 
 We hosted our classification task on Codabench, where participants submit an untrained model that is trained and evaluated on the platform using micro-averaged F1. The competition platform uses the Docker image \texttt{codalab/codalab-legacy:py37}, which only has scikit-learn and standard Python libraries---PyTorch and HuggingFace Transformers are unavailable. This constraint means only traditional ML models can be submitted.
 
-Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (F1 = 0.401) and a majority-class baseline (F1 = 0.272). The only external participant, \textit{dingz37}, achieved F1 = 0.530 on Codabench. Through communication with dingz37, we obtained their full local results: their best model was a fine-tuned DistilBERT-base-uncased (accuracy = 0.581, macro F1 = 0.478), followed by a Bag-of-Words classifier (accuracy = 0.473, macro F1 = 0.313). They also tested two zero-shot models---BART-large-MNLI and DeBERTa-v3---which scored below 0.32 macro F1. Our three locally trained models could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
+Table~\ref{tab:codabench} presents a unified comparison of all models. On Codabench, our group (thaafei13) submitted two traditional ML models: a TF-IDF + Logistic Regression pipeline (accuracy = 0.405, macro F1 = 0.232) and a majority-class baseline (accuracy = 0.272, macro F1 = 0.036). The only external participant, \textit{dingz37}, achieved F1 = 0.530 on Codabench. Through communication with dingz37, we obtained their full local results: their best model was a fine-tuned DistilBERT-base-uncased (accuracy = 0.581, macro F1 = 0.478), followed by a Bag-of-Words classifier (accuracy = 0.473, macro F1 = 0.313). They also tested two zero-shot models---BART-large-MNLI and DeBERTa-v3---which scored below 0.32 macro F1. Our three locally trained models could not be submitted to Codabench because the platform's Docker image (Python 3.7) lacks PyTorch and Transformers.
 
 \begin{table}[t]
 \centering
@@ -144,8 +145,8 @@ dingz37: DistilBERT (local) & 0.581 & 0.478 \\
 dingz37: BoW Classifier (local) & 0.473 & 0.313 \\
 dingz37 (Codabench) & --- & 0.530 \\
 Flan-T5 zero-shot (ours, local) & 0.460 & 0.460 \\
-TF-IDF + LogReg (ours, Codabench) & --- & 0.401 \\
-Baseline (ours, Codabench) & --- & 0.272 \\
+TF-IDF + LogReg (ours, Codabench) & 0.405 & 0.232 \\
+Baseline (ours, Codabench) & 0.272 & 0.036 \\
 \bottomrule
 \end{tabular}
 \caption{All models ranked by F1. Codabench entries use micro-averaged F1; local models use weighted F1. These metrics differ but are shown together for reference.}
